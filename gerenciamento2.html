@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerenciador de Dados</title>
+  <style>
+    body {
+      background-color: #003366;
+      color: white;
+      padding: 20px;
+      font-family: Arial;
+    }
+    h1 {
+      color: #00ccff;
+    }
+    input, select {
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #00ccff;
+      width: 250px;
+    }
+    button {
+      background-color: #00ccff;
+      color: #003366;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .data-list {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gerenciador de Dados</h1>
+
+  <h2>Cadastrar Cliente</h2>
+  <form id="formCliente">
+    <input type="text" id="nomeCliente" placeholder="Nome do Cliente" required>
+    <input type="text" id="cpfCliente" placeholder="CPF do Cliente" required>
+    <button type="submit">Cadastrar Cliente</button>
+  </form>
+
+  <h2>Cadastrar Produto</h2>
+  <form id="formProduto">
+    <input type="text" id="nomeProduto" placeholder="Nome do Produto" required>
+    <input type="number" id="precoProduto" placeholder="Preço do Produto" required>
+    <button type="submit">Cadastrar Produto</button>
+  </form>
+
+  <h2>Cadastrar Compra</h2>
+  <form id="formCompra">
+    <select id="clienteSelect" required>
+      <option value="">Selecione o Cliente</option>
+    </select>
+    <select id="produtoSelect" required>
+      <option value="">Selecione o Produto</option>
+    </select>
+    <input type="number" id="quantidadeCompra" placeholder="Quantidade" required>
+    <button type="submit">Registrar Compra</button>
+  </form>
+
+  <div class="data-list">
+    <h3>Clientes Cadastrados:</h3>
+    <ul id="listaClientes"></ul>
+    <h3>Produtos Cadastrados:</h3>
+    <ul id="listaProdutos"></ul>
+    <h3>Compras Realizadas:</h3>
+    <ul id="listaCompras"></ul>
+  </div>
+
+  <script>
+    let clientes = [];
+    let produtos = [];
+    let compras = [];
+
+    const formCliente = document.getElementById('formCliente');
+    const formProduto = document.getElementById('formProduto');
+    const formCompra = document.getElementById('formCompra');
+
+    const listaClientes = document.getElementById('listaClientes');
+    const listaProdutos = document.getElementById('listaProdutos');
+    const listaCompras = document.getElementById('listaCompras');
+
+    const clienteSelect = document.getElementById('clienteSelect');
+    const produtoSelect = document.getElementById('produtoSelect');
+
+    formCliente.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const nome = document.getElementById('nomeCliente').value;
+      const cpf = document.getElementById('cpfCliente').value;
+      const cliente = new Cliente(cpf, nome);
+      clientes.push(cliente);
+      atualizarListas();
+      formCliente.reset();
+    });
+
+    formProduto.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const nome = document.getElementById('nomeProduto').value;
+      const preco = parseFloat(document.getElementById('precoProduto').value);
+      const produto = new Produto(produtos.length + 1, nome, preco);
+      produtos.push(produto);
+      atualizarListas();
+      formProduto.reset();
+    });
+
+    formCompra.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const clienteCpf = clienteSelect.value;
+      const produtoId = produtoSelect.value;
+      const qtd = document.getElementById('quantidadeCompra').value;
+      const data = new Date().toLocaleDateString();
+      const compra = new Compra(compras.length + 1, clienteCpf, produtoId, qtd, data);
+      compras.push(compra);
+      atualizarListas();
+      formCompra.reset();
+    });
+
+    function atualizarListas() {
+      listaClientes.innerHTML = '';
+      listaProdutos.innerHTML = '';
+      listaCompras.innerHTML = '';
+
+      clienteSelect.innerHTML = '<option value="">Selecione o Cliente</option>';
+      produtoSelect.innerHTML = '<option value="">Selecione o Produto</option>';
+
+      clientes.forEach(cliente => {
+        listaClientes.innerHTML += `<li>${cliente.nome} - CPF: ${cliente.cpf}</li>`;
+        clienteSelect.innerHTML += `<option value="${cliente.cpf}">${cliente.nome}</option>`;
+      });
+
+      produtos.forEach(produto => {
+        listaProdutos.innerHTML += `<li>${produto.nome} - R$${produto.preco}</li>`;
+        produtoSelect.innerHTML += `<option value="${produto.id}">${produto.nome}</option>`;
+      });
+
+      compras.forEach(compra => {
+        listaCompras.innerHTML += `<li>Cliente: ${compra.clienteCpf} | Produto: ${compra.produtoId} | Quantidade: ${compra.qtd} | Data: ${compra.data}</li>`;
+      });
+    }
+  </script>
+
+</body>
+</html>

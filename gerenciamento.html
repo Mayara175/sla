@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerenciador de Dados</title>
+  <style>
+    body { background-color: #002b5c; color: white; font-family: Arial; padding: 20px; }
+    h1, h2 { color: #00ccff; }
+    input, button {
+      padding: 10px;
+      margin: 8px 0;
+      width: 300px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #00ccff;
+      color: #002b5c;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    table {
+      border-collapse: collapse;
+      margin-top: 15px;
+      width: 90%;
+    }
+    th, td {
+      border: 1px solid #00ccff;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #004080;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📦 Sistema de Gerenciamento de Dados</h1>
+
+  <!-- Formulários -->
+  <h2>👤 Cliente</h2>
+  <label>CPF:</label><input id="cpf"><br>
+  <label>Nome:</label><input id="nome"><br>
+  <button onclick="addCliente()">Adicionar Cliente</button>
+
+  <h2>📦 Produto</h2>
+  <label>ID:</label><input id="produtoId"><br>
+  <label>Nome:</label><input id="produtoNome"><br>
+  <label>Preço:</label><input id="produtoPreco"><br>
+  <button onclick="addProduto()">Adicionar Produto</button>
+
+  <h2>🛒 Compra</h2>
+  <label>ID:</label><input id="compraId"><br>
+  <label>CPF Cliente:</label><input id="compraCpf"><br>
+  <label>ID Produto:</label><input id="compraProdutoId"><br>
+  <label>Qtd:</label><input id="compraQtd"><br>
+  <label>Data:</label><input id="compraData" type="date"><br>
+  <button onclick="addCompra()">Registrar Compra</button>
+
+  <hr>
+
+  <!-- Tabelas Dinâmicas -->
+  <h2>📄 Dados Cadastrados</h2>
+
+  <h3>Clientes</h3>
+  <table id="tabelaClientes">
+    <tr><th>CPF</th><th>Nome</th></tr>
+  </table>
+
+  <h3>Produtos</h3>
+  <table id="tabelaProdutos">
+    <tr><th>ID</th><th>Nome</th><th>Preço</th></tr>
+  </table>
+
+  <h3>Compras</h3>
+  <table id="tabelaCompras">
+    <tr><th>ID</th><th>CPF Cliente</th><th>ID Produto</th><th>Qtd</th><th>Data</th></tr>
+  </table>
+
+  <br>
+  <button onclick="verSQL()">➡️ Ir para SQL + Normalização</button>
+  <button onclick="voltar()">🔙 Voltar à Modelagem</button>
+
+  <script>
+    const db = {
+      clientes: [],
+      produtos: [],
+      compras: []
+    };
+
+    function addCliente() {
+      const c = { cpf: cpf.value, nome: nome.value };
+      db.clientes.push(c);
+      alert("Cliente adicionado!");
+      atualizarTabelas();
+    }
+
+    function addProduto() {
+      const p = { id: produtoId.value, nome: produtoNome.value, preco: produtoPreco.value };
+      db.produtos.push(p);
+      alert("Produto adicionado!");
+      atualizarTabelas();
+    }
+
+    function addCompra() {
+      const c = {
+        id: compraId.value,
+        clienteCpf: compraCpf.value,
+        produtoId: compraProdutoId.value,
+        qtd: compraQtd.value,
+        data: compraData.value
+      };
+      db.compras.push(c);
+      alert("Compra registrada!");
+      atualizarTabelas();
+    }
+
+    function atualizarTabelas() {
+      localStorage.setItem("banco", JSON.stringify(db));
+
+      // Clientes
+      const tabelaClientes = document.getElementById("tabelaClientes");
+      tabelaClientes.innerHTML = "<tr><th>CPF</th><th>Nome</th></tr>";
+      db.clientes.forEach(c => {
+        const row = `<tr><td>${c.cpf}</td><td>${c.nome}</td></tr>`;
+        tabelaClientes.innerHTML += row;
+      });
+
+      // Produtos
+      const tabelaProdutos = document.getElementById("tabelaProdutos");
+      tabelaProdutos.innerHTML = "<tr><th>ID</th><th>Nome</th><th>Preço</th></tr>";
+      db.produtos.forEach(p => {
+        const row = `<tr><td>${p.id}</td><td>${p.nome}</td><td>${p.preco}</td></tr>`;
+        tabelaProdutos.innerHTML += row;
+      });
+
+      // Compras
+      const tabelaCompras = document.getElementById("tabelaCompras");
+      tabelaCompras.innerHTML = "<tr><th>ID</th><th>CPF Cliente</th><th>ID Produto</th><th>Qtd</th><th>Data</th></tr>";
+      db.compras.forEach(c => {
+        const row = `<tr><td>${c.id}</td><td>${c.clienteCpf}</td><td>${c.produtoId}</td><td>${c.qtd}</td><td>${c.data}</td></tr>`;
+        tabelaCompras.innerHTML += row;
+      });
+    }
+
+    function verSQL() {
+      localStorage.setItem("banco", JSON.stringify(db));
+      alert("Redirecionando para SQL...");
+      window.location.href = "sql.html";
+    }
+
+    function voltar() {
+      alert("Voltando para a modelagem de dados...");
+      window.location.href = "index.html";
+    }
+
+    // Se houver dados salvos, carrega ao abrir
+    window.onload = () => {
+      const salvo = localStorage.getItem("banco");
+      if (salvo) {
+        const dados = JSON.parse(salvo);
+        db.clientes = dados.clientes || [];
+        db.produtos = dados.produtos || [];
+        db.compras = dados.compras || [];
+        atualizarTabelas();
+      }
+    };
+
+   
+  </script>
+</body>
+</html>

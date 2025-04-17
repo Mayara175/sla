@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Menu Principal</title>
+  <style>
+    body {
+      background-color: #002244;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 60px;
+    }
+    h1 {
+      color: #00ccff;
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+    button {
+      background-color: #00ccff;
+      color: #002244;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 300px;
+    }
+    button:hover {
+      background-color: #0099cc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📚 Navegação Principal</h1>
+  <div class="menu">
+    <button onclick="ir('index.html')">🏗 Modelagem de Dados</button>
+    <button onclick="ir('gerenciador.html')">📦 Gerenciar Dados</button>
+    <button onclick="ir('sql.html')">🧾 SQL + Normalização</button>
+    <button onclick="ir('painel.html')">📊 Painel (Mini phpMyAdmin)</button>
+  </div>
+
+  <script>
+    function ir(pagina) {
+      window.location.href = pagina;
+    }
+  </script>
+
+
+</body>
+</html>
